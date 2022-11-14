@@ -1,5 +1,5 @@
 CC		= g++
-CFLAGS  = -g -Wall
+CFLAGS  = -std=c++11 -g -Wall
 TARGET  = main
 SRCDIR  = ./src
 SRCS    = $(SRCDIR)/main.cpp $(SRCDIR)/proc.cpp

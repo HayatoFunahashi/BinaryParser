@@ -28,8 +28,8 @@ BiParser::BiParser(string work_path)
 int BiParser::write(string path, WORD no, const char *moji)
 {
     ofstream fout;
-    stHeader head = {MAJOR_VER, MINOR_VER0, MINOR_VER1, 0, BUILD_VER};
-    stTail tail = {1, 0, 1, 0};
+    structHead head = {MAJOR_VER, MINOR_VER, 0, BUILD_VER};
+    stTail tail = {1};
 
     WORD len = strlen(moji);
 
@@ -42,10 +42,14 @@ int BiParser::write(string path, WORD no, const char *moji)
     }
 
     {
-        fout.write((char *)&head, sizeof(stHeader));
-        fout.write((char *)&no, sizeof(WORD));
-        fout.write((char *)&len, sizeof(WORD));
-        fout.write((char *)moji, (len)); // no NULL end
+        fout.write((char *)&head, sizeof(structHead));
+
+        {
+            fout.write((char *)&no, sizeof(WORD));
+            fout.write((char *)&len, sizeof(WORD));
+            fout.write((char *)moji, (len)); // no NULL end
+        }
+
         fout.write((char *)&tail, sizeof(stTail));
     }
 
@@ -66,7 +70,7 @@ int BiParser::read(string path)
     }
 
     // skip header
-    fin.seekg(sizeof(stHeader), ios_base::cur);
+    fin.seekg(sizeof(structHead), ios_base::cur);
 
     WORD no, len;
     char *pstr = new char[1024];
